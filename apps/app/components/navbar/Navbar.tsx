@@ -19,7 +19,7 @@ export default function AppNavbar() {
   const supabase = createClient()
   const router = useRouter()
   const { user } = useUser()
-  const { notifications = [], markAllAsRead } = useNotifications() // default to empty array
+  const { notifications = [], markNotificationAsRead } = useNotifications() // default to empty array
 
   const [profile, setProfile] = useState({ avatar_url: '', email: '' })
   const [openDropdown, setOpenDropdown] = useState<string | null>(null)
@@ -46,18 +46,17 @@ export default function AppNavbar() {
     const handleClickOutside = (e: MouseEvent) => {
       if (dropdownRef.current && !dropdownRef.current.contains(e.target as Node)) {
         setOpenDropdown(null)
-        markAllAsRead() // mark all notifications read when dropdown closes
+        
       }
     }
     document.addEventListener('mousedown', handleClickOutside)
     return () => document.removeEventListener('mousedown', handleClickOutside)
-  }, [markAllAsRead])
+  }, [])
 
   // Toggle dropdown, mark notifications as read when opening
   const toggleDropdown = (name: string) => {
     const isOpening = openDropdown !== name
     setOpenDropdown(isOpening ? name : null)
-    if (isOpening) markAllAsRead()
   }
 
   const handleLogout = async () => {
@@ -74,7 +73,7 @@ export default function AppNavbar() {
           open={openDropdown}
           toggle={toggleDropdown}
           notifications={notifications}
-          unreadCount={unreadCount}
+          
         />
         <HelpDropdown open={openDropdown} toggle={toggleDropdown} />
         <ProfileDropdown

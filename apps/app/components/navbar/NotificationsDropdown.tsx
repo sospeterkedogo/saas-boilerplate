@@ -14,17 +14,20 @@ export default function NotificationsDropdown({
   open: string | null
   toggle: (name: string) => void
   notifications: Notification[]
-  unreadCount?: number
 }) {
   const router = useRouter()
-  const { markAllAsRead } = useNotifications()
+  const { markNotificationAsRead } = useNotifications()
   const [selectedNotification, setSelectedNotification] = useState<Notification | null>(null)
 
   const unreadCount = notifications.filter(n => !n.read).length
 
   const handleToggle = () => {
-    toggle('notifications')
-    if (unreadCount > 0) markAllAsRead()
+    toggle('notifications') // just open/close, don’t mark as read
+  }
+
+  const handleNotificationClick = async (n: Notification) => {
+    if (!n.read) await markNotificationAsRead(n.id)
+    setSelectedNotification(n)
   }
 
   return (
@@ -44,14 +47,17 @@ export default function NotificationsDropdown({
 
       {open === 'notifications' && (
         <div className="absolute right-0 mt-3 w-64 bg-background border border-border rounded-xl shadow-lg z-50 animate-in fade-in slide-in-from-top-2">
-          <h3 className="font-semibold mb-2 text-primary border-b border-border p-3">Notifications</h3> 
+          <h3 className="font-semibold mb-2 text-primary border-b border-border p-3">Notifications</h3>
           <div className="max-h-60 overflow-y-auto space-y-2 p-3">
             {notifications.length > 0 ? (
               notifications.map(n => (
                 <button
                   key={n.id}
-                  onClick={() => setSelectedNotification(n)}
-                  className="w-full text-left text-sm bg-secondary p-2 rounded-md hover:bg-muted transition-all"
+                  onClick={() => handleNotificationClick(n)}
+                  className={clsx(
+                    'w-full text-left text-sm p-2 rounded-md transition-all',
+                    n.read ? 'bg-accent/20 text-primary hover:bg-accent/40' : 'bg-secondary'
+                  )}
                 >
                   {n.title}
                 </button>
@@ -60,18 +66,19 @@ export default function NotificationsDropdown({
               <p className="text-sm text-secondary">No new notifications</p>
             )}
           </div>
-            <div className="p-2 flex float-right">
-                <button
-                    onClick={() => {
-                        router.push('/notifications')
-                        toggle('notifications')
-                    }}
-                    className="w-full text-sm text-accent hover:underline"
-                >
-                    View All &rarr;
-                </button>
-            </div>
-        </div>)}
+          <div className="p-2 flex float-right">
+            <button
+              onClick={() => {
+                router.push('/notifications')
+                toggle('notifications')
+              }}
+              className="w-full text-sm text-accent hover:underline"
+            >
+              View All →
+            </button>
+          </div>
+        </div>
+      )}
 
       {selectedNotification && (
         <div className="fixed inset-0 bg-black/40 backdrop-blur-sm flex items-center justify-center z-[999]">
@@ -95,3 +102,5 @@ export default function NotificationsDropdown({
     </div>
   )
 }
+
+

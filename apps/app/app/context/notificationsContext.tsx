@@ -16,7 +16,7 @@ export interface Notification {
 interface NotificationsContextValue {
   notifications: Notification[]
   addNotification: (n: Notification) => void
-  markAllAsRead: () => void
+  markNotificationAsRead: (id: string) => void
 }
 
 const NotificationsContext = createContext<NotificationsContextValue | undefined>(undefined)
@@ -70,12 +70,21 @@ export function NotificationsProvider({ children }: { children: ReactNode }) {
     })
   }
 
-  const markAllAsRead = () => {
-    setNotifications(prev => prev.map(n => ({ ...n, read: true })))
+  const markNotificationAsRead = async (id: string) => {
+    if (!user) return
+    await supabase
+      .from('notifications')
+      .update({ read: true })
+      .eq('id', id)
+      .eq('user_id', user.id)
+
+    setNotifications(prev =>
+      prev.map(n => (n.id === id ? { ...n, read: true } : n))
+    )
   }
 
   return (
-    <NotificationsContext.Provider value={{ notifications, addNotification, markAllAsRead }}>
+    <NotificationsContext.Provider value={{ notifications, addNotification, markNotificationAsRead }}>
       {children}
     </NotificationsContext.Provider>
   )

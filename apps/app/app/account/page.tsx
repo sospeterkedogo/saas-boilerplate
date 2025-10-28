@@ -42,9 +42,11 @@ export default function AccountPage() {
     try {
       await updateProfile(user.id, updatedData)
       setMessage('Profile updated successfully! 🎉')
+      setTimeout(() => setMessage(''), 5000)
       await refreshProfile()
     } catch (err: any) {
       setMessage('Error: ' + err.message)
+      setTimeout(() => setMessage(''), 5000)
     }
   }
 
@@ -52,9 +54,11 @@ export default function AccountPage() {
     try {
       await updatePassword(user.id, password)
       setMessage('Password updated successfully! ✅')
+      setTimeout(() => setMessage(''), 5000)
       setPassword('')
     } catch (err: any) {
       setMessage('Error: ' + err.message)
+      setTimeout(() => setMessage(''), 5000)
     }
   }
 
@@ -95,6 +99,7 @@ export default function AccountPage() {
     await supabase.from('profiles').update({ avatar_url: publicUrl }).eq('id', user.id)
     await refreshProfile()
     setMessage('Avatar updated successfully!')
+    setTimeout(() => setMessage(''), 5000)
   }
 
   const handleAvatarDelete = async () => {
@@ -110,6 +115,7 @@ export default function AccountPage() {
       setProfile({ ...profile, avatar_url: undefined })
       await refreshProfile()
       setMessage('Avatar removed.')
+      setTimeout(() => setMessage(''), 5000)
     } catch (err: any) {
       alert('Error removing avatar: ' + err.message)
     }

@@ -5,9 +5,6 @@ import { createClient } from '@/lib/supabase/client'
 import { useRouter } from 'next/navigation'
 import { useUser } from '@/app/context/userContext'
 import { useNotifications } from '@/app/context/notificationsContext'
-import { Bell, HelpCircle, MessageSquare, User } from 'lucide-react'
-import { clsx } from 'clsx'
-import Image from 'next/image'
 
 // Import child components
 import FeedbackDropdown from './FeedbackDropdown'
@@ -19,13 +16,11 @@ export default function AppNavbar() {
   const supabase = createClient()
   const router = useRouter()
   const { user } = useUser()
-  const { notifications = [], markNotificationAsRead } = useNotifications() // default to empty array
+  const { notifications = [] } = useNotifications() // default to empty array
 
   const [profile, setProfile] = useState({ avatar_url: '', email: '' })
   const [openDropdown, setOpenDropdown] = useState<string | null>(null)
   const dropdownRef = useRef<HTMLDivElement>(null)
-
-  const unreadCount = notifications.filter(n => !n.read).length
 
   // Fetch user profile
   useEffect(() => {

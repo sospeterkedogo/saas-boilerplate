@@ -37,7 +37,7 @@ export default function NotificationsPage() {
         </ul>
 
         {selectedNotification && (
-          <div className="fixed inset-0 bg-black/40 backdrop-blur-sm flex items-center justify-center z-[999]">
+          <div className="fixed inset-0 bg-black/40 backdrop-blur-sm flex items-center justify-center z-999">
             <div className="bg-background border border-border rounded-xl shadow-xl w-96 p-5 relative">
               <button onClick={() => setSelectedNotification(null)} className="absolute top-3 right-3 text-secondary hover:text-primary transition-colors">
                 <X size={18} />

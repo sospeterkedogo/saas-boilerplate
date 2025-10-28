@@ -81,7 +81,7 @@ export default function NotificationsDropdown({
       )}
 
       {selectedNotification && (
-        <div className="fixed inset-0 bg-black/40 backdrop-blur-sm flex items-center justify-center z-[999]">
+        <div className="fixed inset-0 bg-black/40 backdrop-blur-sm flex items-center justify-center z-999">
           <div className="bg-background border border-border rounded-xl shadow-xl w-96 p-5 relative animate-in fade-in slide-in-from-top-2">
             <button
               onClick={() => setSelectedNotification(null)}
